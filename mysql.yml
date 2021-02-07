@@ -1,0 +1,29 @@
+-
+  name: Install MySQL
+  hosts: vm_servers
+  vars_files:
+    - vars/main.yml
+  pre_tasks:
+    - name: Make sure pymysql is present
+      become: yes # needed if the other tasks are not played as root
+      pip:
+        name: setuptools,pymysql
+        state: present
+    - name: Add MySQL repository key
+      apt_key: url=http://repo.mysql.com/RPM-GPG-KEY-mysql state=present
+      become: yes
+    - name: Try to specify preference for mysql
+      shell: echo mysql-apt-config mysql-apt-config/select-server select mysql-8.0 | debconf-set-selections
+      become: yes
+    # Download mysql debian package
+    - name: Add mysql apt-config debian
+      apt: deb=http://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb update-cache=yes
+      become: yes
+    - name: Override variables for MySQL
+      set_fact:
+        mysql_daemon: mysql
+        mysql_packages: ['mysql-server']
+        mysql_syslog_tag: mysql
+  roles:
+    - role: geerlingguy.mysql
+      become: yes

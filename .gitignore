@@ -1,0 +1,3 @@
+host_vars/dev_server.yml
+host_vars/staging_server.yml
+.vault_pass

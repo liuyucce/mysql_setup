@@ -1,0 +1,6 @@
+[vm_servers]
+dev_server
+staging_server
+
+[vm_servers:vars]
+ansible_python_interpreter=/usr/bin/python3
